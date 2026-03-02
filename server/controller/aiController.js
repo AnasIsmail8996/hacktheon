@@ -4,7 +4,7 @@ import Prescription from "../models/prescriptionModel.js";
 
 const getGenAI = () => {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error("GEMINI_API_KEY not set in .env");
+    if (!apiKey) throw new Error("GEMINI_API_KEY not configured in environment variables");
     return new GoogleGenerativeAI(apiKey);
 };
 
@@ -211,21 +211,21 @@ const riskFlagging = async (req, res) => {
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
             const prompt = `Analyze this patient's medical history for risk patterns.
-Patient's symptom history (last ${logs.length} visits): ${allSymptoms}
-High-risk visits: ${highRiskCount}
+            Patient's symptom history (last ${logs.length} visits): ${allSymptoms}
+             High-risk visits: ${highRiskCount}
 
-Identify:
-1. Any repeated infection or chronic patterns (list as bullet points)
-2. High-risk symptom combinations
-3. Recommendations for preventive care
+            Identify:
+           1. Any repeated infection or chronic patterns (list as bullet points)
+           2. High-risk symptom combinations
+           3. Recommendations for preventive care
 
-Format:
-RISK FLAGS:
-- flag1
-- flag2
+            Format:
+           RISK FLAGS:
+          - flag1
+         - flag2
 
-SUMMARY:
-[2-3 sentences]`;
+        SUMMARY:
+     [2-3 sentences]`;
 
             const result = await model.generateContent(prompt);
             const text = result.response.text();
